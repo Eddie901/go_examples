@@ -10,11 +10,18 @@ import (
 	"os"
 )
 
-var palette = []color.Color{color.RGBA{0x00,0x80,0x00, 0xff}, color.RGBA{0x80,0x00,0x00, 0xff}}
+var palette = []color.Color{
+	color.RGBA{0xff,0xff,0xff, 0xff},
+	color.RGBA{0x80,0x00,0x00, 0xff},
+	color.RGBA{0x80,0x00,0x80, 0xff},
+	color.RGBA{0x00,0x80,0x80, 0xff},
+}
 
 const (
 	whiteIndex = 0 // first colour in palette
 	blackIndex = 1 // second colour in palette
+	purpleIndex = 2 // third colour in palette
+	turquoiseIndex = 3 // fourth colour in palette
 )
 
 func main() {
@@ -23,8 +30,8 @@ func main() {
 
 func lissajous(out io.Writer) {
 	const (
-		cycles  = 5
-		res     = 0.001
+		cycles  = 6
+		res     = 0.002
 		size    = 500
 		nframes = 64
 		delay   = 8
@@ -38,7 +45,8 @@ func lissajous(out io.Writer) {
 		for t := 0.0; t < cycles*2*math.Pi; t += res {
 			x := math.Sin(t)
 			y := math.Sin(t*freq + phase)
-			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), blackIndex)
+			color := i % 4
+			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), uint8(color))
 		}
 		phase += 0.1
 		anim.Delay = append(anim.Delay, delay)
